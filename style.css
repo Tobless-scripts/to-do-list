@@ -1,6 +1,6 @@
 * {
     margin: 0;
-    padding: 0;
+    padding: .5em;
     box-sizing: border-box;
     font-family: sans-serif;
 }
@@ -130,7 +130,7 @@ footer {
         bottom: 15%;
         background-color: blue;
         position: fixed;
-        right: 4.5em;
+        right: 3vw;
     }
 }
 @media screen and (max-width: 576px) {
