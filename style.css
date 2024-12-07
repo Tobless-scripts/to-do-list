@@ -85,7 +85,6 @@ footer {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 0 3em;
     align-self: center;
     transform: translateY(10%);
 }
@@ -159,7 +158,7 @@ footer {
 }
 @media screen and (max-width: 1000px) {
     .mainDiv {
-        height: 70%;
+        height: 90%;
         width: 95%;
         margin-left: 2.5%;
     }
