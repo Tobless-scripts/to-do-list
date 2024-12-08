@@ -8,26 +8,22 @@ body {
     padding: 3vw;
 }
 h3 {
-    color: #aeaeae;
+    color: #e0e0e0;
 }
 #container {
-    background-color: rgb(81, 81, 253);
+    background-color: #4169e1;
     padding: 2vw;
     border-radius: 1em;
     border: none;
-    font-size: 1.7em;
+    font-size: 1.5em;
     text-align: center;
     margin: 1em auto;
     color: white;
-    height: 5em;
-    display: flex;
-    justify-content: center;
-    align-items: center;
 }
 @media screen and (max-width: 1000px) {
     #container {
-        text-align: left;
-        font-size: 1.5em;
+        text-align: center;
+        font-size: 1em;
         padding: 1.5em;
         height: auto;
     }
@@ -40,8 +36,8 @@ h3 {
     padding-top: 1vw;
 }
 #personal, .personal {
-    background-color: #B9CDF5;
-    width: 8em;
+    background-color: #a4c8e1;
+    width: 10em;
     padding: 1em;
     border: none;
     border-radius: 1em;
@@ -50,8 +46,8 @@ h3 {
     cursor: pointer;
 }
 #work, .work {
-    background-color: #aeaeae;
-    width: 8em;
+    background-color: #e0e0e0;
+    width: 10em;
     padding: 1em;
     border: none;
     border-radius: 1em;
@@ -68,12 +64,12 @@ h3 {
 
 @media screen and (max-width: 576px) {
     #personal, .personal, #work, .work {
-        width: 6.5em;
+        width: 8em;
     }
 }
 
 footer {
-    border-top: .2em solid #aeaeae;
+    border-top: .2em solid #e0e0e0;
     position: fixed;
     bottom: 1vw;
     left: 0;
@@ -90,32 +86,31 @@ footer {
 }
 .footimage {
     text-align: center;
-    color: rgb(242, 240, 240);
+    color: #e0e0e0;
     cursor: pointer;
 }
-.footimage:active {
-    color: blue;
+.footimage.active {
+    text-align: center;
+    color: #4169e1;
+    cursor: pointer;
 }
 #taskImg {
-    background-color: #aeaeae;
+    background-color: #4169e1;
     mix-blend-mode: multiply;
     border-radius: 100%;
     width: 3em;
 }
 #personImg {
-    background-color: #aeaeae;
+    background-color: #e0e0e0;
     mix-blend-mode: multiply;
     border-radius: 100%;
     width: 3em;
 }
-#personImg:active, #taskImg:active {
-    background-color: blue;
-}
 #add {
-    background-color: blue;
+    background-color: #4169e1;
     position: fixed;
     bottom: 20%;
-    right: 5.5em;
+    right: 3vw;
     border-radius: 100%;
     z-index: 1;
     cursor: pointer;
@@ -127,10 +122,13 @@ footer {
 }
 @media screen and (max-width: 1240px) {
     #add {
-        bottom: 15%;
-        background-color: blue;
+        bottom: 25%;
+        background-color: #4169e1;
         position: fixed;
         right: 3vw;
+    }
+    footer {
+        padding: 3vw;
     }
 }
 @media screen and (max-width: 576px) {
@@ -138,10 +136,10 @@ footer {
         width: 3em;
     }
     #add {
-        bottom: 15%;
-        background-color: blue;
+        bottom: 17%;
+        background-color: #4169e1;
         position: fixed;
-        right: 3em;
+        right: 1em;
     }
 }
 
@@ -158,9 +156,8 @@ footer {
 }
 @media screen and (max-width: 1000px) {
     .mainDiv {
-        height: 90%;
-        width: 95%;
-        margin-left: 2.5%;
+        height: 100%;
+        width: 100%;
     }
 }
 @media screen and (max-width: 576px) {
@@ -170,7 +167,7 @@ footer {
 }
 .firstTask {
     margin: 0 2em;
-    border-bottom: 2px solid #aeaeae;
+    border-bottom: 2px solid #e0e0e0;
     border-radius: .5em;
 }
 .taskText {
@@ -195,7 +192,7 @@ footer {
     width: 100%;
     border-radius: .5em;
     padding: .5em 3em;
-    border: 1px solid #aeaeae;
+    border: 1px solid #e0e0e0;
     background-color: #f5f0f0;
     margin: .5em auto;
 }
@@ -214,5 +211,5 @@ footer {
     display: flex;
     justify-content: space-between;
     margin-top: .5em;
-    margin-bottom: .5em;
+    margin-bottom: 1em;
 }
