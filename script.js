@@ -1,262 +1,226 @@
+// Display the current date in the header
 const options = { year: 'numeric', month: 'long', day: 'numeric' };
+const dayDate = new Date().toLocaleDateString('en-US', options);
+document.getElementById("day").innerHTML = dayDate;
 
-let dayDate = new Date().toLocaleDateString('en-US', options);
-let day = document.getElementById("day");
-day.innerHTML = dayDate;
+// Initialize tasks from localStorage when the page loads
+window.onload = () => {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.forEach(task => addToDom(task.text, task.completed, task.category, task.details));
+};
 
-// For adding new task
-let addTask = document.getElementById("addTask");
-addTask.addEventListener('click', () => {
+// Save a task to localStorage
+function saveTaskToLocalStorage(task) {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks.push(task);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
-    let divs = document.getElementById("divs");
+// Update a task's completion status in localStorage
+function updateTaskInLocalStorage(text, completed) {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks = tasks.map(task => {
+        if (task.text === text) task.completed = completed;
+        return task;
+    });
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
 
-    // Get main div
-    let mainDiv = document.createElement("div");
+// Remove a task from localStorage
+function removeFromLocalStorage(text) {
+    let tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+    tasks = tasks.filter(task => task.text !== text);
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+}
+
+// Add a task to the DOM
+function addToDom(text, completed, category, details) {
+    // Create task container
+    const taskContainer = document.createElement("div");
+    taskContainer.classList.add("taskContainer");
+
+    const tasksHome = document.createElement("div");
+    tasksHome.classList.add("tasksHome");
+
+    const taskText = document.createElement("p");
+    taskText.classList.add("taskText");
+    taskText.textContent = text;
+
+    // Style completed tasks
+    if (completed) {
+        taskText.style.textDecoration = "line-through";
+        taskText.style.color = "#aeaeae";
+    }
+
+    // Add checkbox for marking tasks as complete
+    const check = document.createElement("input");
+    check.type = "checkbox";
+    check.classList.add("check");
+    check.checked = completed;
+
+     // Toggle task completion
+     check.addEventListener('click', (e) => {
+        e.stopPropagation(); // Prevent the click event from propagating to the taskContainer
+        taskText.style.textDecoration = check.checked ? "line-through" : "none";
+        taskText.style.color = check.checked ? "#aeaeae" : "black";
+        updateTaskInLocalStorage(text, check.checked);
+    });
+
+    // Add a button to remove the task
+    const removeBtn = document.createElement("button");
+    removeBtn.classList.add("removeBtn");
+    removeBtn.textContent = "Remove";
+    removeBtn.addEventListener('click', () => {
+        taskContainer.remove();
+        removeFromLocalStorage(text);
+    });
+
+    // Append elements to the task container
+    tasksHome.append(check, taskText, removeBtn);
+    taskContainer.append(tasksHome);
+
+    // Toggle and display task details
+    taskContainer.addEventListener('click', () => {
+        const existingDetails = taskContainer.querySelector(".taskDetails");
+        if (existingDetails) {
+            existingDetails.remove();
+        } else {
+            const taskDetails = document.createElement("div");
+            taskDetails.classList.add("taskDetails");
+
+            const timeSelected = document.createElement("p");
+            const dateSelected = document.createElement("p");
+            const descriptionAdded = document.createElement("p");
+
+            timeSelected.textContent = `Time: ${details.time || "Not specified"}`;
+            dateSelected.textContent = `Date: ${details.date || "Not specified"}`;
+            descriptionAdded.textContent = `Description: ${details.description || "No description"}`;
+
+            taskDetails.append(timeSelected, dateSelected, descriptionAdded);
+            taskContainer.appendChild(taskDetails);
+        }
+    });
+
+    // Append the task to the appropriate category container
+    if (category === "Personal") {
+        document.getElementById("divs2").appendChild(taskContainer);
+    } else {
+        document.getElementById("taskContent").appendChild(taskContainer);
+    }
+}
+
+// Toggle visibility between Personal and Work tasks
+document.getElementById("personal").addEventListener('click', () => {
+    document.getElementById("divs2").classList.add("show");
+    document.getElementById("divs2").classList.remove("hidden");
+    document.getElementById("taskContent").classList.add("hidden");
+    document.getElementById("taskContent").classList.remove("show");
+});
+
+document.getElementById("work").addEventListener('click', () => {
+    document.getElementById("taskContent").classList.add("show");
+    document.getElementById("taskContent").classList.remove("hidden");
+    document.getElementById("divs2").classList.add("hidden");
+    document.getElementById("divs2").classList.remove("show");
+});
+
+// Add a new task
+document.getElementById("addTask").addEventListener('click', () => {
+    const mainDiv = document.createElement("div");
     mainDiv.classList.add("mainDiv");
 
-    // Create new div for the task
-    let taskDiv = document.createElement("div");
-    taskDiv.classList.add('taskDiv');
+    const taskDiv = document.createElement("div");
+    taskDiv.classList.add("taskDiv");
 
-    // Create text and style for task title
-    let firstText = document.createElement("h2");
-    firstText.classList.add("firstTask");
-    firstText.textContent = "New Task";
-    firstText.style.textAlign = "center";
-    firstText.style.fontWeight = "2.1rem";
-    firstText.style.padding = "1em";
-
-    // Create input for task title
-    let taskText = document.createElement("p");
-    taskText.textContent = "Task Title";
-    taskText.classList.add("taskText");
-
-    let inputTask = document.createElement("input");
-    inputTask.classList.add("inputTask");
-    inputTask.type = "text";
-    inputTask.placeholder = "Add Task Name";
-
-    // Create category section
-    let category = document.createElement("div");
-    category.classList.add("category");
-
-    let categoryText = document.createElement("p");
-    categoryText.textContent = "Category";
-    categoryText.classList.add("categoryText");
-
-    // Category buttons
-    let personalButton = document.createElement("button");
-    personalButton.textContent = "Personal";
-    personalButton.classList.add("personal");
-
-    let workButton = document.createElement("button");
-    workButton.textContent = "Work";
-    workButton.classList.add("work");
-
-    // Add description section
-    let descriptionText = document.createElement("p");
-    descriptionText.classList.add("categoryText");
-    descriptionText.textContent = "Description";
-
-    let description = document.createElement("textarea");
-    description.classList.add("description");
-    description.rows = 4;
-    description.cols = 30;
-    description.placeholder = "Add Description (Optional)";
-
-    // Add date and time section
-    let timeDiv = document.createElement("div");
-    timeDiv.classList.add("timeDiv");
-
-    let dates = document.createElement("div");
-
-    let datename = document.createElement("p");
-    datename.textContent = "Date";
-
-    let taskDate = document.createElement("input");
-    taskDate.classList.add("taskDate");
-    taskDate.type = "date";
-
-    let times = document.createElement("div");
-
-    let timeName = document.createElement("p");
-    timeName.textContent = "Time";
-
-    let taskTime = document.createElement("input");
-    taskTime.classList.add("taskTime");
-    taskTime.type = "time";
-
-    // Buttons for cancel and create task
-    let cancel = document.createElement("div");
-    cancel.classList.add("category");
-
-    let cancelButton = document.createElement("button");
-    cancelButton.textContent = "Cancel";
-    cancelButton.classList.add("personal");
-
-    let createButton = document.createElement("button");
-    createButton.textContent = "Create";
-    createButton.classList.add("work");
-
-    // Create the task when the button is clicked
-    createButton.addEventListener('click', () => {
-        const value = inputTask.value.trim();
-        const timeValue = taskTime.value.trim();
-        const dateValue = taskDate.value.trim();
-        const descriptionValue = description.value.trim();
-    
-        // Validate inputs
-        if (!value || !timeValue || !dateValue) {
-            alert("Please complete all required fields.");
-            return;
-        }
-    
-        // Determine selected category
-        const isPersonalSelected = personalButton.style.border.includes("solid");
-        const isWorkSelected = workButton.style.border.includes("solid");
-    
-        if (!isPersonalSelected && !isWorkSelected) {
-            alert("Please select a category!");
-            return;
-        }
-    
-        // Create task content
-        const taskContainer = document.createElement("div");
-        taskContainer.classList.add("taskContainer");
-    
-        const taskText = document.createElement("p");
-        taskText.classList.add("taskText");
-        taskText.textContent = `${value}`;
-    
-        const check = document.createElement("input");
-        check.type = "checkbox";
-        check.classList.add("check");
-    
-        check.addEventListener('click', () => {
-            taskText.style.textDecoration = check.checked ? "line-through" : "none";
-            taskText.style.color = check.checked ? "#aeaeae" : "black";
-        });
-    
-        const removeBtn = document.createElement("button");
-        removeBtn.classList.add("removeBtn");
-        removeBtn.textContent = "Remove";
-        removeBtn.addEventListener('click', () => {
-            taskContainer.remove();
-        });
-
-        let tasksHome = document.createElement("div")
-        tasksHome.classList.add("tasksHome")
-    
-        tasksHome.appendChild(check);
-        tasksHome.appendChild(taskText);
-        tasksHome.appendChild(removeBtn);
-        taskContainer.appendChild(tasksHome)
-
-        taskContainer.appendChild(tasksHome);
-
-        taskContainer.addEventListener('click', () => {
-            // Check if taskDetails already exists
-            let existingTaskDetails = taskContainer.querySelector(".taskDetails");
-        
-            if (existingTaskDetails) {
-                // If taskDetails exists, remove it (toggle off)
-                taskContainer.removeChild(existingTaskDetails);
-            } else {
-                // If taskDetails doesn't exist, create and display it (toggle on)
-                let taskDetails = document.createElement("div");
-                taskDetails.classList.add("taskDetails");
-        
-                let timeSelected = document.createElement("p");
-                let dateSelected = document.createElement("p");
-                let descriptionAdded = document.createElement("p");
-        
-                timeSelected.innerHTML = `Task should be performed at ${timeValue}`;
-                dateSelected.innerHTML = `Task date is ${dateValue}`;
-                const currentDate = new Date()
-                if (dateValue === currentDate.toISOString().split('T')[0]) {
-                    dateSelected.innerHTML = `Task date is today`;
-                }
-                descriptionAdded.innerHTML = `Description: ${descriptionValue}`;
-        
-                taskDetails.appendChild(timeSelected);
-                taskDetails.appendChild(dateSelected);
-                taskDetails.appendChild(descriptionAdded);
-        
-                taskContainer.appendChild(taskDetails);
-            }
-        });
-        
-    
-        // Append to the correct container based on category
-        if (isPersonalSelected) {
-            document.getElementById("divs2").appendChild(taskContainer);
-        } else if (isWorkSelected) {
-            document.getElementById("taskContent").appendChild(taskContainer);
-        }
-    
-        // Toggle visibility based on button clicks
-        document.getElementById("personal").addEventListener('click', () => {
-            document.getElementById("divs2").classList.add("show");
-            document.getElementById("divs2").classList.remove("hidden");
-            document.getElementById("taskContent").classList.add("hidden");
-            document.getElementById("taskContent").classList.remove("show");
-        });
-    
-        document.getElementById("work").addEventListener('click', () => {
-            document.getElementById("taskContent").classList.add("show");
-            document.getElementById("taskContent").classList.remove("hidden");
-            document.getElementById("divs2").classList.add("hidden");
-            document.getElementById("divs2").classList.remove("show");
-        });
-    
-        // Reset category selection and remove the modal
-        personalButton.style.border = "none";
-        workButton.style.border = "none";
-        mainDiv.remove();
-    });
-    
-    
-    // Append all content for task creation form
-    category.appendChild(personalButton);
-    category.appendChild(workButton);
-
-    dates.appendChild(datename);
-    dates.appendChild(taskDate);
-    times.appendChild(timeName);
-    times.appendChild(taskTime);
-
-    timeDiv.appendChild(dates);
-    timeDiv.appendChild(times);
-
-    cancel.appendChild(cancelButton);
-    cancel.appendChild(createButton);
-
-    taskDiv.appendChild(firstText);
-    taskDiv.appendChild(taskText);
-    taskDiv.appendChild(inputTask);
-    taskDiv.appendChild(categoryText);
-    taskDiv.appendChild(category);
-    taskDiv.appendChild(descriptionText);
-    taskDiv.appendChild(description);
-    taskDiv.appendChild(timeDiv);
-    taskDiv.appendChild(cancel);
+    // Task input fields
+    taskDiv.innerHTML = `
+        <h2 class="firstTask" style="text-align: center; font-weight: bold; padding: 1em;">New Task</h2>
+        <p class="taskText">Task Title</p>
+        <input class="inputTask" type="text" placeholder="Add Task Name">
+        <p class="categoryText">Category</p>
+        <div class="category">
+            <button class="personal">Personal</button>
+            <button class="work">Work</button>
+        </div>
+        <p class="categoryText">Description</p>
+        <textarea class="description" rows="4" cols="30" placeholder="Add Description (Optional)"></textarea>
+        <div class="timeDiv">
+            <div>
+                <p>Date</p>
+                <input class="taskDate" type="date">
+            </div>
+            <div>
+                <p>Time</p>
+                <input class="taskTime" type="time">
+            </div>
+        </div>
+        <div class="category">
+            <button class="personal" id="cancel">Cancel</button>
+            <button class="work" id="create">Create</button>
+        </div>
+    `;
 
     mainDiv.appendChild(taskDiv);
-    divs.appendChild(mainDiv);
+    document.getElementById("divs").appendChild(mainDiv);
 
-    // Cancel button logic
-    cancelButton.addEventListener('click', () => {
-        mainDiv.remove();
-    });
+    // Category button styling
+    const personalButton = taskDiv.querySelector(".personal");
+    const workButton = taskDiv.querySelector(".work");
 
-    // Border selection for category buttons
     personalButton.addEventListener('click', () => {
-        personalButton.style.border = "2px solid #aeaeae";  // Add border for selected category
-        workButton.style.border = "none";                   // Remove border from the other category
+        // Highlight the selected category
+        personalButton.style.backgroundColor = "#4169e1"; // Light green background
+        personalButton.style.color = "white"; // Dark green text
+        workButton.style.backgroundColor = ""; // Reset other button
+        workButton.style.color = "";
     });
 
     workButton.addEventListener('click', () => {
-        workButton.style.border = "2px solid #aeaeae";      // Add border for selected category
-        personalButton.style.border = "none";               // Remove border from the other category
+        // Highlight the selected category
+        workButton.style.backgroundColor = "#4169e1"; // Light blue background
+        workButton.style.color = "white"; // Dark blue text
+        personalButton.style.backgroundColor = ""; // Reset other button
+        personalButton.style.color = "";
     });
+
+    // Create task
+    taskDiv.querySelector("#create").addEventListener('click', () => {
+        const text = taskDiv.querySelector(".inputTask").value.trim();
+        const date = taskDiv.querySelector(".taskDate").value.trim();
+        const time = taskDiv.querySelector(".taskTime").value.trim();
+        const description = taskDiv.querySelector(".description").value.trim();
+        const category = personalButton.style.backgroundColor
+            ? "Personal"
+            : workButton.style.backgroundColor
+            ? "Work"
+            : null;
+
+        if (!text || !category) {
+            alert("Please complete all required fields!");
+            return;
+        }
+
+        const task = { text, completed: false, category, details: { date, time, description } };
+        saveTaskToLocalStorage(task);
+        addToDom(task.text, task.completed, task.category, task.details);
+
+        onTaskAdded();
+
+        mainDiv.remove();
+    });
+
+    // Cancel task creation
+    taskDiv.querySelector("#cancel").addEventListener('click', () => mainDiv.remove());
 });
+
+function onTaskAdded() {
+    const tasks = JSON.parse(localStorage.getItem("tasks")) || [];
+
+    if (tasks.length > 0) {
+        // Do something when at least one task is added
+        const taskNotification = document.getElementById("inspirationText");
+        taskNotification.innerHTML = "Keep it up!! Complete your tasks. You almost there!"
+    }
+}
+
+    

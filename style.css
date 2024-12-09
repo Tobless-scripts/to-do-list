@@ -15,7 +15,7 @@ h3 {
     padding: 2vw;
     border-radius: 1em;
     border: none;
-    font-size: 1.5em;
+    font-size: 1.2em;
     text-align: center;
     margin: 1em auto;
     color: white;
@@ -35,7 +35,7 @@ h3 {
     align-items: center;
     padding-top: 1vw;
 }
-#personal, .personal {
+#personal{
     background-color: #a4c8e1;
     width: 10em;
     padding: .5em;
@@ -44,6 +44,16 @@ h3 {
     font-size: 1.1rem;
     letter-spacing: .1rem;
     cursor: pointer;
+}
+.personal {
+    width: 10em;
+    padding: .5em;
+    border: none;
+    border-radius: .5em;
+    font-size: 1.1rem;
+    letter-spacing: .1rem;
+    cursor: pointer;
+    background-color: #e0e0e0;
 }
 #work, .work {
     background-color: #e0e0e0;
@@ -182,6 +192,7 @@ footer {
     height: 3em;
     padding: 1em;
     margin-bottom: .5em;
+    font-size: 16px;
 }
 .categoryText {
     font-size: 1.5rem;
@@ -193,6 +204,7 @@ footer {
     width: 100%;
     border-radius: .5em;
     padding: .5em 3em;
+    font-size: 16px;
     border: 1px solid #e0e0e0;
     background-color: #f5f0f0;
     margin: .5em auto;
@@ -261,7 +273,7 @@ footer {
     width: 1em;
 }
 .taskText {
-    font-size: .9rem;
+    font-size: 16px;
     font-weight: 600;
     color: black;
     word-wrap: break-word;
